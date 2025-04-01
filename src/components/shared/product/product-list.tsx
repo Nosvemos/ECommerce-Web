@@ -1,3 +1,5 @@
+import ProductCard from '@/components/shared/product/product-card'
+
 const ProductList = ({ data, title, limit } : {
   data: any, // Only for now
   title?: string,
@@ -9,9 +11,9 @@ const ProductList = ({ data, title, limit } : {
     <div className='my-10'>
       <h2 className='h2-bold mb-4'>{title}</h2>
       { limitedData.length > 0 ? (
-        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {limitedData.map((product: any) => (
-            <div key={product.name}>{product.name}</div>
+            <ProductCard key={product.slug} product={product}></ProductCard>
           ))}
         </div>
       ) : (
