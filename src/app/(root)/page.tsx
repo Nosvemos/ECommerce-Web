@@ -1,10 +1,15 @@
+import sampleData from '@/db/sample-data'
+import ProductList from '@/components/shared/product/product-list'
+
 export const metadata = {
   title: 'Home',
 }
 
 const Homepage = () => {
   return (
-    <>Home page</>
+    <>
+      <ProductList data={sampleData.products} title='Newest Arrivals' limit={4}/>
+    </>
   )
 }
 
