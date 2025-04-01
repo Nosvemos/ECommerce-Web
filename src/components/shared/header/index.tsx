@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { APP_NAME } from '@/lib/constants'
 import { Button } from '@/components/ui/button'
+import ModeToggle from '@/components/shared/header/mode-toggle'
 
 const Header = () => {
   return (
@@ -23,6 +24,7 @@ const Header = () => {
           </Link>
         </div>
         <div className='space-x-2'>
+          <ModeToggle/>
           <Button variant='ghost' asChild>
             <Link href='/cart'>
               <ShoppingCart /> Cart
