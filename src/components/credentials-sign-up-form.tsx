@@ -44,8 +44,8 @@ const CredentialsSignUpForm = () => {
       <input type='hidden' name='callbackUrl' value={callbackUrl} />
       <div className='space-y-6'>
         <div>
-          <Label htmlFor='name'>Name</Label>
-          <Input id='name' name='name' type='text' autoComplete='name' defaultValue={SIGN_UP_DEFAULT_VALUES.name} required />
+          <Label htmlFor='name'>Name (Optional)</Label>
+          <Input id='name' name='name' type='text' autoComplete='name' />
         </div>
         <div>
           <Label htmlFor='email'>Email</Label>

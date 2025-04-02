@@ -73,7 +73,7 @@ export const config = {
 
         // If user has no name then use the email
         if (user.name === 'NO_NAME') {
-          token.name = user.email!.split('@')[0];
+          token.name = user.email!.split('@')[0].toUpperCase();
 
           // Update database to reflect the token name
           await prisma.user.update({
