@@ -3,7 +3,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import ProductPrice from '@/components/shared/product/product-price'
 import { Product } from '@/types'
-import { Button } from '@/components/ui/button'
 
 const ProductCard = ({ product } : {
   product : Product
