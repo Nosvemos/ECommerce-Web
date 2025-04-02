@@ -2,9 +2,10 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import Link from 'next/link'
 import Image from 'next/image'
 import ProductPrice from '@/components/shared/product/product-price'
+import { Product } from '@/types'
 
 const ProductCard = ({ product } : {
-  product : any
+  product : Product
 }) => {
   return (
     <Card className='w-full max-w-[300px] mx-auto'>
