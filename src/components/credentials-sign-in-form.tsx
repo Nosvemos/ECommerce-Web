@@ -10,6 +10,7 @@ import { signInWithCredentials } from '@/lib/actions/user.actions'
 import Form from 'next/form'
 import { useFormStatus } from 'react-dom'
 import { Loader2Icon } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
 
 const CredentialsSignInForm = () => {
   const initialState = {
@@ -17,6 +18,9 @@ const CredentialsSignInForm = () => {
     message: '',
   };
   const [state, formAction] = useActionState(signInWithCredentials, initialState);
+
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
 
   const SignInButton = () => {
     const { pending } = useFormStatus();
@@ -37,6 +41,7 @@ const CredentialsSignInForm = () => {
 
   return (
     <Form action={formAction}>
+      <input type='hidden' name='callbackUrl' value={callbackUrl} />
       <div className='space-y-6'>
         <div>
           <Label htmlFor='email'>Email</Label>
