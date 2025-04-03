@@ -5,8 +5,21 @@ import Link from 'next/link'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import Image from 'next/image'
 import ProductQuantityButton from '@/components/shared/product/product-quantity-button'
+import { Card, CardContent } from '@/components/ui/card'
+import { formatCurrency, round2 } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation'
+import { useTransition } from 'react'
+import { Loader, ArrowRightToLine } from 'lucide-react'
 
 const CartTable = ({ cart } : { cart?: Cart }) => {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  const checkoutButtonHandler = () => {
+    startTransition(() => router.push('/shipping-address'))
+  }
+
   return (
     <div>
       <h1 className='h2-bold py-4'>Shopping Cart</h1>
@@ -39,13 +52,31 @@ const CartTable = ({ cart } : { cart?: Cart }) => {
                       <ProductQuantityButton cart={cart} item={item} />
                     </TableCell>
                     <TableCell className='text-right'>
-                      ${Number(item.price) * item.qty}
+                      ${(round2(item.price)) * item.qty}
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </div>
+          <Card>
+            <CardContent className='p-4 gap-4'>
+              <h1 className='pb-2 text-xl'>
+                Subtotal ({ cart.items.reduce((a, i) => a + i.qty, 0)}):{' '}
+                <span className='font-bold'>
+                  {formatCurrency(cart.itemsPrice)}
+                </span>
+              </h1>
+              <Button className='w-full' disabled={isPending} onClick={checkoutButtonHandler}>
+                { isPending ? (
+                  <Loader className='size-4 animate-spin'/>
+                ) : (
+                  <ArrowRightToLine className="size-4" />
+                )}{' '}
+                Proceed to Checkout
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       )}
     </div>

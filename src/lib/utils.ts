@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { CURRENCY_FORMATTER } from '@/lib/constants'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -38,5 +39,16 @@ export function round2(value: number | string) {
     return Math.round((value + Number.EPSILON) * 100) / 100;
   } else {
     return Math.round((Number(value) + Number.EPSILON) * 100) / 100;
+  }
+}
+
+// Format currency using the formatter
+export function formatCurrency(amount: number | string | null) {
+  if(typeof amount === 'number') {
+    return CURRENCY_FORMATTER.format(amount);
+  } else if (typeof amount === 'string') {
+    return CURRENCY_FORMATTER.format(Number(amount));
+  } else {
+    return NaN;
   }
 }

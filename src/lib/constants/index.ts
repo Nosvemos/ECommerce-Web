@@ -7,10 +7,17 @@ export const LATEST_PRODUCTS_LIMIT = Number(process.env.LATEST_PRODUCTS_LIMIT) |
 export const SIGN_IN_DEFAULT_VALUES = {
   email: '',
   password: ''
-}
+};
+
 export const SIGN_UP_DEFAULT_VALUES = {
   name: '',
   email: '',
   password: '',
   confirmPassword: ''
-}
+};
+
+export const CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
+  currency: 'USD',
+  style: 'currency',
+  minimumFractionDigits: 2,
+});
