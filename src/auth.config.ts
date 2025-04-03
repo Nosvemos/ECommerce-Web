@@ -5,7 +5,7 @@ export const authConfig = {
   providers: [], // Required by NextAuthConfig type
   callbacks: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    authorized({ request, auth }: any) {
+    authorized({ request }: any) {
       // Check for session cart cookie
       if (!request.cookies.get('sessionCartId')) {
         // Generate new session cart id cookie
