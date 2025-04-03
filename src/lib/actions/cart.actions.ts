@@ -166,6 +166,9 @@ export async function removeItemFromCart (productId: string) {
     const exist = (cart.items as CartItem[]).find((x) => x.productId === productId);
     if(!exist) throw new Error('Product not exist');
 
+    // For dynamic message
+    const oldQty = exist.qty;
+
     // Check if only one in quantity
     if (exist.qty === 1) {
       // Remove from cart
@@ -191,7 +194,7 @@ export async function removeItemFromCart (productId: string) {
 
     return {
       success: true,
-      message: `${product.name} was ${exist.qty === 1 ? 'removed from' : 'updated in'} cart`,
+      message: `${product.name} was ${oldQty === 1 ? 'removed from' : 'updated in'} cart`,
     }
   } catch (error) {
     return {
