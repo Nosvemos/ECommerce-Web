@@ -34,6 +34,7 @@ export async function signInWithCredentials(prevState: unknown, formData: FormDa
 
 // Sign user out
 export async function signOutUser() {
+  //TODO Clear sessionCartId
   await signOut();
 }
 
