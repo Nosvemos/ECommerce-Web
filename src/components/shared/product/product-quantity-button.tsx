@@ -1,31 +1,32 @@
 'use client'
 
-import { toast } from "sonner"
+import { useRouter } from 'next/navigation'
+import { useTransition } from 'react'
+import { addItemToCart, removeItemFromCart } from '@/lib/actions/cart.actions'
+import { toast } from 'sonner'
 import { Cart, CartItem } from '@/types'
 import { Button } from '@/components/ui/button'
-import { addItemToCart, removeItemFromCart } from '@/lib/actions/cart.actions'
-import { useRouter } from 'next/navigation'
 import { Loader, Minus, Plus } from 'lucide-react'
-import { useTransition } from 'react'
 
-const AddToCart = ({ cart, item } : { cart?: Cart, item: CartItem }) => {
+const ProductQuantityButton = ({ cart, item } : { cart?: Cart, item: CartItem }) => {
   const router = useRouter();
 
   const [isPending, startTransition] = useTransition();
 
+  // Handle add item to cart
   const handleAddToCart = async () => {
     startTransition(() => {
       addItemToCart(item)
-      .then(res => {
-        if (!res.success) return toast.error(res.message);
+        .then(res => {
+          if (!res.success) return toast.error(res.message);
 
-        toast(res.message, {
-          action: {
-            label: 'Go to Cart',
-            onClick: () => router.push('/cart'),
-          },
+          toast(res.message, {
+            action: {
+              label: 'Go to Cart',
+              onClick: () => router.push('/cart'),
+            },
+          });
         });
-      });
     });
   }
 
@@ -33,20 +34,19 @@ const AddToCart = ({ cart, item } : { cart?: Cart, item: CartItem }) => {
   const handleRemoveFromCart = async() => {
     startTransition(async() => {
       removeItemFromCart(item.productId)
-      .then(res => {
-        if (!res.success) return toast.error(res.message);
+        .then(res => {
+          if (!res.success) return toast.error(res.message);
 
-        toast(res.message, {
-          action: {
-            label: 'Go to Cart',
-            onClick: () => router.push('/cart'),
-          },
+          toast(res.message, {
+            action: {
+              label: 'Go to Cart',
+              onClick: () => router.push('/cart'),
+            },
+          });
         });
-      });
     });
   }
 
-  // Check if item is in cart
   const existItem = cart && cart.items.find((x) => x.productId === item.productId);
   return existItem ? (
     <div className="flex items-center">
@@ -66,7 +66,7 @@ const AddToCart = ({ cart, item } : { cart?: Cart, item: CartItem }) => {
         <Plus className="size-4" />
       </Button>
     </div>
-    ) : (
+  ) : (
     <Button className='w-full' type='button' onClick={handleAddToCart} disabled={isPending}>
       { isPending ? (
         <Loader className='size-4 animate-spin'/>
@@ -78,4 +78,4 @@ const AddToCart = ({ cart, item } : { cart?: Cart, item: CartItem }) => {
   )
 }
 
-export default AddToCart
+export default ProductQuantityButton

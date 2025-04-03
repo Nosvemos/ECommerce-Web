@@ -4,8 +4,8 @@ import ProductPrice from '@/components/shared/product/product-price'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import ProductImages from '@/components/shared/product/product-images'
-import AddToCart from '@/components/shared/product/add-to-cart'
 import { getMyCart } from '@/lib/actions/cart.actions'
+import ProductQuantityButton from '@/components/shared/product/product-quantity-button'
 
 const ProductDetailsPage = async(props: {
   params: Promise<{ slug: string }>
@@ -56,7 +56,7 @@ const ProductDetailsPage = async(props: {
               </div>
               {product.stock > 0 && (
                 <div className='flex-center'>
-                  <AddToCart
+                  <ProductQuantityButton
                     cart={cart}
                     item={{
                     productId: product.id,
