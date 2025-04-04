@@ -23,9 +23,9 @@ export const CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
 });
 
 export const SHIPPING_ADDRESS_DEFAULT_VALUES = {
-  fullName: 'John Doe',
-  streetAddress: '123 Main Street',
-  city: 'New York',
-  postalCode: '12345',
-  country: 'United States',
+  fullName: '',
+  streetAddress: '',
+  city: '',
+  postalCode: '',
+  country: '',
 }
