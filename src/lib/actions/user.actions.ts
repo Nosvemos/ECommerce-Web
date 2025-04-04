@@ -7,6 +7,7 @@ import { prisma } from '@/db/prisma'
 import { hashSync } from 'bcrypt-ts-edge'
 import { formatError } from '@/lib/utils'
 import { ShippingAddress } from '@/types'
+import { cookies } from 'next/headers'
 
 // Sign in the user with credentials
 export async function signInWithCredentials(prevState: unknown, formData: FormData) {
@@ -35,7 +36,10 @@ export async function signInWithCredentials(prevState: unknown, formData: FormDa
 
 // Sign user out
 export async function signOutUser() {
-  //TODO Clear sessionCartId
+  // Clear sessionCartId cookie
+  const cookieStore = await cookies();
+  cookieStore.delete('sessionCartId');
+
   await signOut();
 }
 
