@@ -1,12 +1,11 @@
 import type { NextAuthConfig } from 'next-auth';
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth'
 
 export const authConfig = {
   providers: [], // Required by NextAuthConfig type
   callbacks: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    authorized({ request }: any) {
+    authorized({ request, auth }: any) {
       // Array of regex patterns of paths we want to protect
       const protectedPaths = [
         /\/shipping-address/,
