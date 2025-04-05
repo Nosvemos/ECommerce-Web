@@ -19,7 +19,7 @@ export const SIGN_UP_DEFAULT_VALUES = {
   confirmPassword: ''
 };
 
-export const CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
+export const CURRENCY_FORMATTER = new Intl.NumberFormat(DEFAULT_REGION.replace('_', '-'), {
   currency: DEFAULT_CURRENCY,
   style: 'currency',
   minimumFractionDigits: 2,
