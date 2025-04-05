@@ -1,4 +1,4 @@
-import { DEFAULT_CURRENCY } from '@/lib/constants'
+import { DEFAULT_CURRENCY } from './constants'
 
 const base = process.env.PAYPAL_API_URL || 'https://api-m.sandbox.paypal.com';
 
