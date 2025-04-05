@@ -1,8 +1,7 @@
 'use server';
 
-// Create order and create the order items
 import { isRedirectError } from 'next/dist/client/components/redirect-error'
-import { formatError } from '@/lib/utils'
+import { convertToPlainObject, formatError } from '@/lib/utils'
 import { auth } from '@/auth'
 import { getMyCart } from '@/lib/actions/cart.actions'
 import { getUserById } from '@/lib/actions/user.actions'
@@ -10,6 +9,7 @@ import { insertOrderSchema } from '@/lib/validators'
 import { prisma } from '@/db/prisma'
 import { CartItem } from '@/types'
 
+// Create order and create the order items
 export async function createOrder () {
   try {
     const session = await auth();
@@ -104,4 +104,23 @@ export async function createOrder () {
       message: formatError(error)
     }
   }
+}
+
+// Get order by id
+export async function getOrderById (orderId: string) {
+  const data = await prisma.order.findFirst({
+    where: {
+      id: orderId
+    },
+    include: {
+      orderItems: true,
+      user: {
+        select: {
+          name: true,
+          email: true
+        }
+      }
+    }
+  });
+  return convertToPlainObject(data);
 }
