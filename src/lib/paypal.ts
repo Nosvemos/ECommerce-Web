@@ -1,6 +1,50 @@
+import { DEFAULT_CURRENCY } from '@/lib/constants'
+
 const base = process.env.PAYPAL_API_URL || 'https://api-m.sandbox.paypal.com';
 
-export const paypal = {};
+export const paypal = {
+  // Create order request
+  createOrder: async function createOrder(price: number) {
+    const accessToken = await generateAccessToken();
+    const url = `${base}/v2/checkout/orders`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        intent: 'CAPTURE',
+        purchase_units: [
+          {
+            amount: {
+              currency_code: DEFAULT_CURRENCY,
+              value: price
+            }
+          }
+        ]
+      })
+    });
+    return handleResponse(response);
+  },
+
+  // Capture payment request
+  capturePayment: async function capturePayment(orderId: string) {
+    const accessToken = await generateAccessToken();
+    const url = `${base}/v2/checkout/orders/${orderId}/capture`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+
+    return handleResponse(response);
+  }
+};
 
 // Generate access token
 export async function generateAccessToken() {
@@ -16,9 +60,13 @@ export async function generateAccessToken() {
     }
   });
 
+  const jsonData = await handleResponse(response);
+  return jsonData.access_token;
+}
+
+async function handleResponse(response: Response) {
   if (response.ok) {
-    const { access_token } = await response.json();
-    return access_token;
+    return response.json();
   } else {
     const errorMessage = await response.text();
     throw new Error(errorMessage);
