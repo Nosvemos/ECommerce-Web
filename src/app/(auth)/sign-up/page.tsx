@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { APP_NAME } from '@/lib/constants'
 import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
-import CredentialsSignUpForm from '@/components/credentials-sign-up-form'
+import CredentialsSignUpForm from '@/components/forms/credentials-sign-up-form'
 
 export const metadata: Metadata = {
   title: 'Sign Up'

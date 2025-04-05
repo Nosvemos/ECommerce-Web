@@ -3,7 +3,7 @@ import { getMyCart } from '@/lib/actions/cart.actions'
 import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
 import { getUserById } from '@/lib/actions/user.actions'
-import ShippingAddressForm from '@/components/shipping-address-form'
+import ShippingAddressForm from '@/components/forms/shipping-address-form'
 import { ShippingAddress } from '@/types'
 import CheckoutSteps from '@/components/shared/checkout-steps'
 
