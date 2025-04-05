@@ -52,7 +52,7 @@ const CartTable = ({ cart } : { cart?: Cart }) => {
                       <ProductQuantityButton cart={cart} item={item} />
                     </TableCell>
                     <TableCell className='text-right'>
-                      ${(round2(item.price)) * item.qty}
+                      {formatCurrency((round2(item.price)) * item.qty)}
                     </TableCell>
                   </TableRow>
                 ))}

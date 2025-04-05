@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn, formatCurrency } from '@/lib/utils'
 
 const ProductPrice = ({ value, className } : {
   value: number,
@@ -8,7 +8,7 @@ const ProductPrice = ({ value, className } : {
   const [intValue, floatValue] = stringValue.split('.');
   return (
     <p className={cn('text-2xl', className)}>
-      <span className='text-xs align-super'>$</span>
+      <span className='text-xs align-super'>{formatCurrency(value).toString().charAt(0)}</span>
       {intValue}
       <span className='text-xs align-super'>.{floatValue}</span>
     </p>
