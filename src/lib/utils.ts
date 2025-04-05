@@ -60,6 +60,7 @@ export function formatId(id: string) {
 
 // Format date and times
 export const formatDateTime = (dateString: Date) => {
+  const region = DEFAULT_REGION.replace('_', '-');
   const dateTimeOptions: Intl.DateTimeFormatOptions = {
     year: 'numeric', // numeric year (e.g., '2023')
     month: 'short', // abbreviated month name (e.g., 'Oct')
@@ -80,15 +81,15 @@ export const formatDateTime = (dateString: Date) => {
     hour12: true, // use 12-hour clock (true) or 24-hour clock (false)
   };
   const formattedDateTime: string = new Date(dateString).toLocaleString(
-    DEFAULT_REGION,
+    region,
     dateTimeOptions
   );
   const formattedDate: string = new Date(dateString).toLocaleString(
-    DEFAULT_REGION,
+    region,
     dateOptions
   );
   const formattedTime: string = new Date(dateString).toLocaleString(
-    DEFAULT_REGION,
+    region,
     timeOptions
   );
   return {
