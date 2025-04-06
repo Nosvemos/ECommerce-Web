@@ -278,11 +278,11 @@ async function updateOrderToPaid ({ orderId, paymentResult }: {
 // Get users' orders
 export async function getUserOrders({ limit = PAGE_SIZE, page } : { limit?: number, page: number }) {
   const session = await auth();
-  if (!session) throw new Error('User is not authorized');
+  if (!session || !session?.user?.id) throw new Error('User is not authorized');
 
   const data = await prisma.order.findMany({
     where: {
-      userId: session?.user?.id!
+      userId: session.user.id
     },
     orderBy : {
       createdAt: 'desc'
@@ -293,7 +293,7 @@ export async function getUserOrders({ limit = PAGE_SIZE, page } : { limit?: numb
 
   const dataCount = await prisma.order.count({
     where: {
-      userId: session?.user?.id!
+      userId: session.user.id
     }
   });
 
