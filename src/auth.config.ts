@@ -16,6 +16,7 @@ export const authConfig = {
         /\/order\/(.*)/,
         /\/admin/,
       ];
+      
       // Get pathname from the req URL object
       const { pathname } = request.nextUrl;
 
