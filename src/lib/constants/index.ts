@@ -6,6 +6,7 @@ export const DEFAULT_REGION = process.env.DEFAULT_REGION || 'en_US'
 export const DEFAULT_CURRENCY = process.env.DEFAULT_CURRENCY || 'USD'
 
 export const LATEST_PRODUCTS_LIMIT = Number(process.env.LATEST_PRODUCTS_LIMIT) || 4;
+export const PAGE_SIZE = Number(process.env.PAGE_SIZE) || 2
 
 export const SIGN_IN_DEFAULT_VALUES = {
   email: '',
