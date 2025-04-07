@@ -116,3 +116,8 @@ export function formUrlQuery ({params, key, value} : {
     skipNull: true,
   });
 }
+
+// Format Number
+export function formatNumber (number: number) {
+  return new Intl.NumberFormat(DEFAULT_REGION.replace('_', '-')).format(number);
+}
