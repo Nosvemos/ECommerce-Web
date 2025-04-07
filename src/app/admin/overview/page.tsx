@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import { auth } from '@/auth'
 import { getOrderSummary } from '@/lib/actions/order.actions'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { BadgeDollarSign, Barcode, CreditCardIcon, Users } from 'lucide-react'
@@ -7,14 +6,14 @@ import { formatCurrency, formatDateTime, formatNumber } from '@/lib/utils'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import Link from 'next/link'
 import Charts from '@/components/admin/charts'
+import { requireAdmin } from '@/lib/auth-guard'
 
 export const metadata : Metadata = {
   title: 'Admin Dashboard',
 }
 
 const AdminOverviewPage = async() => {
-  const session = await auth();
-  if (session?.user?.role !== 'admin') throw new Error('User is not authorized');
+  await requireAdmin();
 
   const summary = await getOrderSummary();
 

@@ -7,10 +7,6 @@ import { authConfig } from '@/auth.config';
 import { cookies } from 'next/headers'
 
 export const config = {
-  pages: {
-    signIn: '/sign-in',
-    error: '/sign-in',
-  },
   session: {
     strategy: 'jwt' as const,
     maxAge: 7 * 24 * 60 * 60, // 7 days
