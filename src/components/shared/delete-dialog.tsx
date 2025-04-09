@@ -21,7 +21,7 @@ const DeleteDialog = ({id, action} : {
     startTransition(async () => {
       action(id).then((res) => {
         if (!res.success) return toast.error(res.message);
-        
+
         setOpen(false);
         toast(res.message);
       })
