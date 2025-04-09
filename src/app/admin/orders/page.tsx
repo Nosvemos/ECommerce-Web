@@ -1,11 +1,12 @@
 import { Metadata } from 'next'
 import { auth } from '@/auth'
-import { getAllOrders } from '@/lib/actions/order.actions'
+import { deleteOrder, getAllOrders } from '@/lib/actions/order.actions'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { formatCurrency, formatDateTime, formatId } from '@/lib/utils'
 import Link from 'next/link'
 import Pagination from '@/components/shared/pagination'
 import { Button } from '@/components/ui/button'
+import DeleteDialog from '@/components/shared/delete-dialog'
 
 export const metadata : Metadata = {
   title: 'Admin Orders'
@@ -53,7 +54,7 @@ const AdminOrdersPage = async (props: {
                       Details
                     </Link>
                   </Button>
-                  {/* Delete Button */}
+                  <DeleteDialog id={order.id} action={deleteOrder} />
                 </TableCell>
               </TableRow>
             ))}
