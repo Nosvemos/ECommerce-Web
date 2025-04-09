@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
-import { getUserOrders } from '@/lib/actions/order.actions'
+import { auth } from '@/auth'
+import { getAllOrders } from '@/lib/actions/order.actions'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { formatCurrency, formatDateTime, formatId } from '@/lib/utils'
 import Link from 'next/link'
@@ -7,16 +8,20 @@ import Pagination from '@/components/shared/pagination'
 import { Button } from '@/components/ui/button'
 
 export const metadata : Metadata = {
-  title: 'My Orders'
+  title: 'Admin Orders'
 }
 
-const OrdersPage = async (props: {
+const AdminOrdersPage = async (props: {
   searchParams: Promise<{page: string}>
 }) => {
-  const { page } = await props.searchParams;
+  const { page = '1' } = await props.searchParams;
 
-  const orders= await getUserOrders({
-    page: Number(page) || 1
+  const session = await auth();
+  if (session?.user?.role !== 'admin') throw new Error('User is not authorized');
+
+  const orders = await getAllOrders({
+    page: Number(page),
+    limit: 3
   });
 
   return (
@@ -48,6 +53,7 @@ const OrdersPage = async (props: {
                       Details
                     </Link>
                   </Button>
+                  {/* Delete Button */}
                 </TableCell>
               </TableRow>
             ))}
@@ -61,4 +67,4 @@ const OrdersPage = async (props: {
   )
 }
 
-export default OrdersPage
+export default AdminOrdersPage
