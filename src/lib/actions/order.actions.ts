@@ -414,7 +414,7 @@ export async function deleteOrder (id: string) {
 // Update CashOnDelivery order to paid
 export async function updateCashOnDeliveryOrderToPaid (orderId: string) {
   try {
-    await updateOrderToPaid(orderId);
+    await updateOrderToPaid({ orderId });
 
     revalidatePath(`/order/${orderId}`);
 

@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button'
 
 const DeleteDialog = ({id, action} : {
   id: string,
-  action: (id: string) => Promise<{ success: Boolean, message: string }>,
+  action: (id: string) => Promise<{ success: boolean, message: string }>,
 }) => {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -38,9 +38,7 @@ const DeleteDialog = ({id, action} : {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action can't be undone
-          </AlertDialogDescription>
+          <AlertDialogDescription>This action can not be undone</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>

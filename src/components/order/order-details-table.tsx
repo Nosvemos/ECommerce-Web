@@ -13,10 +13,17 @@ import {
   PayPalScriptProvider,
   usePayPalScriptReducer
 } from '@paypal/react-paypal-js'
-import { approvePayPalOrder, createPayPalOrder } from '@/lib/actions/order.actions'
+import {
+  approvePayPalOrder,
+  createPayPalOrder,
+  deliverOrder,
+  updateCashOnDeliveryOrderToPaid
+} from '@/lib/actions/order.actions'
 import { toast } from 'sonner';
+import { useTransition } from 'react'
+import { Button } from '@/components/ui/button'
 
-const OrderDetailsTable = ({ order, paypalClientId } : { order: Order, paypalClientId: string }) => {
+const OrderDetailsTable = ({ order, paypalClientId, isAdmin } : { order: Order, paypalClientId: string, isAdmin: boolean }) => {
   const {
     id,
     shippingAddress,
@@ -59,6 +66,38 @@ const OrderDetailsTable = ({ order, paypalClientId } : { order: Order, paypalCli
       })
       .catch(() => toast.error('Payment processing failed'));
   };
+
+  // Button to mark order as paid
+  const MarkAsPaidButton = () => {
+    const [isPending, startTransition] = useTransition();
+
+    return (
+      <Button type='button' disabled={isPending} onClick={() => startTransition(async () => {
+        updateCashOnDeliveryOrderToPaid(order.id).then((res) => {
+          if (!res.success) return toast.error(res.message);
+          toast(res.message);
+        })
+      })}>
+        {isPending ? 'Processing...' : 'Mark as paid'}
+      </Button>
+    )
+  }
+
+  // Button to mark order as delivered
+  const MarkAsDeliveredButton = () => {
+    const [isPending, startTransition] = useTransition();
+
+    return (
+      <Button type='button' disabled={isPending} onClick={() => startTransition(async () => {
+        deliverOrder(order.id).then((res) => {
+          if (!res.success) return toast.error(res.message);
+          toast(res.message);
+        })
+      })}>
+        {isPending ? 'Processing...' : 'Mark as delivered'}
+      </Button>
+    )
+  }
 
   return (
     <>
@@ -162,6 +201,12 @@ const OrderDetailsTable = ({ order, paypalClientId } : { order: Order, paypalCli
                   </PayPalScriptProvider>
                 </div>
               )}
+
+              {/* Mark order as paid (only CashOnDelivery) */}
+              { isAdmin && !isPaid && paymentMethod === 'CashOnDelivery' && <MarkAsPaidButton/>}
+
+              {/* Mark order as delivered */}
+              { isAdmin && isPaid && !isDelivered && <MarkAsDeliveredButton/>}
             </CardContent>
           </Card>
         </div>
