@@ -28,7 +28,7 @@ export async function getProductBySlug(slug: string) {
 }
 
 // Get all products
-// eslint-disable-next-line no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function getAllProducts({
   query,
   limit = PAGE_SIZE,
@@ -43,7 +43,10 @@ export async function getAllProducts({
   //TODO Category and Query
   const data = await prisma.product.findMany({
     skip: (page - 1) * limit,
-    take: limit
+    take: limit,
+    orderBy: {
+      createdAt: 'desc'
+    }
   });
 
   const dataCount = await prisma.product.count();

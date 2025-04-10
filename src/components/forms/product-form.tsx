@@ -1,7 +1,7 @@
 'use client'
 
 import { Product } from '@/types'
-import { ControllerRenderProps, useForm } from 'react-hook-form'
+import { ControllerRenderProps, SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { insertProductSchema, updateProductSchema } from '@/lib/validators'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -11,20 +11,47 @@ import slugify from 'slugify'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
+import { createProduct, updateProduct } from '@/lib/actions/product.actions'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 const ProductForm = ({ type, product, productId } : {
   type: 'Create' | 'Update',
   product?: Product,
   productId?: string
 }) => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof insertProductSchema>>({
     resolver: zodResolver(type === 'Update' ? updateProductSchema : insertProductSchema),
     defaultValues: product && type === 'Update' ? product : PRODUCT_DEFAULT_VALUES
   });
 
+  const onSubmit:SubmitHandler<z.infer<typeof insertProductSchema>> = async (values) => {
+    // On Create
+    if (type === 'Create') {
+      const res = await createProduct(values);
+      if (!res.success) return toast.error(res.message);
+
+      toast(res.message);
+      router.push('/admin/products');
+    }
+
+    // On Update
+    else if (type === 'Update') {
+      if (!productId) return toast.error('Product ID not found');
+
+      const res = await updateProduct({ ...values, id: productId });
+      if (!res.success) return toast.error(res.message);
+
+      toast(res.message);
+      router.push('/admin/products');
+    }
+  }
+
   return (
     <Form {...form}>
-      <form className='space-y-8'>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
         <div className='flex flex-col md:flex-row gap-5'>
           {/* Name */}
           <FormField control={form.control} name='name' render={({ field } : { field: ControllerRenderProps<z.infer<typeof insertProductSchema>, 'name'> }) => (
