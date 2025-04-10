@@ -18,6 +18,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import Image from 'next/image'
 import { UploadDropzone } from '@/lib/uploadthing'
 import { twMerge } from 'tailwind-merge'
+import { Checkbox } from '@/components/ui/checkbox'
 
 const ProductForm = ({ type, product, productId } : {
   type: 'Create' | 'Update',
@@ -54,6 +55,8 @@ const ProductForm = ({ type, product, productId } : {
   }
 
   const images = form.watch('images');
+  const isFeatured = form.watch('isFeatured');
+  const banner = form.watch('banner');
 
   return (
     <Form {...form}>
@@ -149,11 +152,17 @@ const ProductForm = ({ type, product, productId } : {
               <Card>
                 <CardContent className='space-y-2 mt-2 min-h-48'>
                   <FormControl>
-                    <UploadDropzone config={{ cn: twMerge }} className='w-full ut-button:text-sm ut-button:font-medium ut-button:bg-primary ut-button:ut-readying:bg-primary/80 ut-button:text-primary-foreground ut-label:text-muted-foreground ut-allowed-content:text-muted-foreground' endpoint='imageUploader' onUploadError={(error: Error) => {
-                      toast.error(`Error! ${error.message}`);
-                    }} onClientUploadComplete={(res: { url: string }[]) => {
-                      form.setValue('images', [...images, res[0].url ]);
-                    }} />
+                    <UploadDropzone
+                      config={{ cn: twMerge }}
+                      className='w-full border-0 ut-button:text-sm ut-button:font-medium ut-button:bg-primary ut-button:ut-readying:bg-primary/80 ut-button:text-primary-foreground ut-label:text-muted-foreground ut-allowed-content:text-muted-foreground'
+                      endpoint='imageUploader'
+                      onUploadError={(error: Error) => {
+                        toast.error(`Error! ${error.message}`);
+                      }}
+                      onClientUploadComplete={(res: { url: string }[]) => {
+                       form.setValue('images', [...images, res[0].url ]);
+                      }}
+                    />
                   </FormControl>
                   <div className='flex md:flex-row gap-2'>
                     { images.map((image: string) => (
@@ -168,6 +177,43 @@ const ProductForm = ({ type, product, productId } : {
         </div>
         <div className='upload-field'>
           {/* isFeatured */}
+          <div className='flex gap-2'>
+            <span className='text-sm font-semibold'>Featured Content</span>
+            <FormField control={form.control} name='isFeatured' render={({ field }) => (
+              <FormItem className='space-x-2 items-center'>
+                <FormControl>
+                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                </FormControl>
+              </FormItem>
+            )} />
+          </div>
+          { isFeatured && banner && (
+            <Image src={banner} alt='Banner Image' className='w-full object-cover object-center rounded-sm' width={1920} height={680} />
+          )}
+          { isFeatured && !banner && (
+            <Card className='mt-2'>
+              <CardContent className='space-y-2 mt-2 min-h-48'>
+                <FormControl>
+                  <UploadDropzone
+                    config={{ cn: twMerge }}
+                    endpoint='imageUploader'
+                    className='w-full border-0 ut-button:text-sm ut-button:font-medium ut-button:bg-primary ut-button:ut-readying:bg-primary/80 ut-button:text-primary-foreground ut-label:text-muted-foreground ut-allowed-content:text-muted-foreground'
+                    onUploadError={(error: Error) => {
+                      toast.error(`Error! ${error.message}`);
+                    }}
+                    onClientUploadComplete={(res: { url: string }[]) => {
+                      form.setValue('banner', res[0].url);
+                    }}
+                  />
+                </FormControl>
+                <div className='flex md:flex-row gap-2'>
+                  { images.map((image: string) => (
+                    <Image key={image} src={image} alt='Product Image' className='size-30 object-center object-cover rounded-sm' width={200} height={200} />
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
         <div>
           {/* Submit */}
