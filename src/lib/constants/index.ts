@@ -20,6 +20,21 @@ export const SIGN_UP_DEFAULT_VALUES = {
   confirmPassword: ''
 };
 
+export const PRODUCT_DEFAULT_VALUES = {
+  name: '',
+  slug: '',
+  category: '',
+  images: [],
+  brand: '',
+  description: '',
+  price: '0',
+  stock: '0',
+  rating: '0',
+  numReviews: 0,
+  isFeatured: false,
+  banner: null
+}
+
 export const CURRENCY_FORMATTER = new Intl.NumberFormat(DEFAULT_REGION.replace('_', '-'), {
   currency: DEFAULT_CURRENCY,
   style: 'currency',
