@@ -19,6 +19,8 @@ import Image from 'next/image'
 import { UploadDropzone } from '@/lib/uploadthing'
 import { twMerge } from 'tailwind-merge'
 import { Checkbox } from '@/components/ui/checkbox'
+import { X } from 'lucide-react'
+import { deleteImage } from '@/lib/actions/uploadthing.actions'
 
 const ProductForm = ({ type, product, productId } : {
   type: 'Create' | 'Update',
@@ -164,9 +166,29 @@ const ProductForm = ({ type, product, productId } : {
                       }}
                     />
                   </FormControl>
-                  <div className='flex md:flex-row gap-2'>
-                    { images.map((image: string) => (
-                      <Image key={image} src={image} alt='Product Image' className='size-30 object-center object-cover rounded-sm' width={200} height={200} />
+                  <div className='flex flex-wrap gap-2'>
+                    {images.map((image: string) => (
+                      <div key={image} className="relative group">
+                        <Image
+                          src={image}
+                          alt='Product Image'
+                          className='size-30 object-center object-cover rounded-sm border'
+                          width={200}
+                          height={200}
+                        />
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            await deleteImage(image);
+
+                            const newImages = images.filter(img => img !== image);
+                            form.setValue('images', newImages);
+                          }}
+                          className="absolute -top-3 -right-3 bg-secondary text-muted-foreground rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className='size-4'/>
+                        </button>
+                      </div>
                     ))}
                   </div>
                 </CardContent>
@@ -177,7 +199,7 @@ const ProductForm = ({ type, product, productId } : {
         </div>
         <div className='upload-field'>
           {/* isFeatured */}
-          <div className='flex gap-2'>
+          <div className='flex gap-2 mb-2'>
             <span className='text-sm font-semibold'>Featured Content</span>
             <FormField control={form.control} name='isFeatured' render={({ field }) => (
               <FormItem className='space-x-2 items-center'>
@@ -188,10 +210,23 @@ const ProductForm = ({ type, product, productId } : {
             )} />
           </div>
           { isFeatured && banner && (
-            <Image src={banner} alt='Banner Image' className='w-full object-cover object-center rounded-sm' width={1920} height={680} />
+            <div key={banner} className="relative group">
+              <Image src={banner} alt='Banner Image' className='w-full object-cover object-center rounded-sm' width={1920} height={680} />
+              <button
+                type="button"
+                onClick={async () => {
+                  await deleteImage(banner);
+
+                  form.setValue('banner', null);
+                }}
+                className="absolute -top-3 -right-3 bg-secondary text-muted-foreground rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <X className='size-4'/>
+              </button>
+            </div>
           )}
           { isFeatured && !banner && (
-            <Card className='mt-2'>
+            <Card>
               <CardContent className='space-y-2 mt-2 min-h-48'>
                 <FormControl>
                   <UploadDropzone
@@ -206,11 +241,6 @@ const ProductForm = ({ type, product, productId } : {
                     }}
                   />
                 </FormControl>
-                <div className='flex md:flex-row gap-2'>
-                  { images.map((image: string) => (
-                    <Image key={image} src={image} alt='Product Image' className='size-30 object-center object-cover rounded-sm' width={200} height={200} />
-                  ))}
-                </div>
               </CardContent>
             </Card>
           )}

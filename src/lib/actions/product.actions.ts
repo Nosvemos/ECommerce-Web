@@ -74,7 +74,11 @@ export async function deleteProduct (id: string) {
     });
     if (!productExists) throw new Error('Product not found');
 
-    const images = productExists.images;
+    const imagesToBeDeleted = productExists.images;
+
+    if (productExists.isFeatured && productExists.banner) {
+      imagesToBeDeleted.push(productExists.banner);
+    }
 
     await prisma.product.delete({
       where: {
@@ -83,7 +87,7 @@ export async function deleteProduct (id: string) {
     });
 
     // Delete images
-    images.map(async(image) => {
+    imagesToBeDeleted.map(async(image) => {
       await deleteImage(image);
     });
 
