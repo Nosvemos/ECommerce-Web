@@ -14,6 +14,9 @@ import { Textarea } from '@/components/ui/textarea'
 import { createProduct, updateProduct } from '@/lib/actions/product.actions'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
+import { Card, CardContent } from '@/components/ui/card'
+import Image from 'next/image'
+import { UploadDropzone } from '@/lib/uploadthing'
 
 const ProductForm = ({ type, product, productId } : {
   type: 'Create' | 'Update',
@@ -48,6 +51,8 @@ const ProductForm = ({ type, product, productId } : {
       router.push('/admin/products');
     }
   }
+
+  const images = form.watch('images');
 
   return (
     <Form {...form}>
@@ -125,6 +130,28 @@ const ProductForm = ({ type, product, productId } : {
         </div>
         <div className='upload-field flex flex-col md:flex-row gap-5'>
           {/* Images */}
+          <FormField control={form.control} name='images' render={() => (
+            <FormItem className='w-full'>
+              <FormLabel>Images</FormLabel>
+              <Card>
+                <CardContent className='space-y-2 mt-2 min-h-48'>
+                  <FormControl>
+                    <UploadDropzone className='w-full ut-button:bg-primary ut-button:ut-readying:bg-primary/80 ut-button:text-primary-foreground ut-label:text-muted-foreground ut-allowed-content:text-muted-foreground' endpoint='imageUploader' onUploadError={(error: Error) => {
+                      toast.error(`Error! ${error.message}`);
+                    }} onClientUploadComplete={(res: { url: string }[]) => {
+                      form.setValue('images', [...images, res[0].url ]);
+                    }} />
+                  </FormControl>
+                  <div className='flex md:flex-row gap-2'>
+                    { images.map((image: string) => (
+                      <Image key={image} src={image} alt='Product Image' className='size-30 object-center object-cover rounded-sm' width={200} height={200} />
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+              <FormMessage/>
+            </FormItem>
+          )} />
         </div>
         <div className='upload-field'>
           {/* isFeatured */}
