@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation'
 import { Card, CardContent } from '@/components/ui/card'
 import Image from 'next/image'
 import { UploadDropzone } from '@/lib/uploadthing'
+import { twMerge } from 'tailwind-merge'
 
 const ProductForm = ({ type, product, productId } : {
   type: 'Create' | 'Update',
@@ -84,6 +85,18 @@ const ProductForm = ({ type, product, productId } : {
             </FormItem>
           )} />
         </div>
+        <div>
+          {/* Description */}
+          <FormField control={form.control} name='description' render={({ field } : { field: ControllerRenderProps<z.infer<typeof insertProductSchema>, 'description'> }) => (
+            <FormItem className='w-full'>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea placeholder='Enter product description' className='resize-none' {...field} />
+              </FormControl>
+              <FormMessage/>
+            </FormItem>
+          )} />
+        </div>
         <div className='flex flex-col md:flex-row gap-5'>
           {/* Category */}
           <FormField control={form.control} name='category' render={({ field } : { field: ControllerRenderProps<z.infer<typeof insertProductSchema>, 'category'> }) => (
@@ -136,7 +149,7 @@ const ProductForm = ({ type, product, productId } : {
               <Card>
                 <CardContent className='space-y-2 mt-2 min-h-48'>
                   <FormControl>
-                    <UploadDropzone className='w-full ut-button:bg-primary ut-button:ut-readying:bg-primary/80 ut-button:text-primary-foreground ut-label:text-muted-foreground ut-allowed-content:text-muted-foreground' endpoint='imageUploader' onUploadError={(error: Error) => {
+                    <UploadDropzone config={{ cn: twMerge }} className='w-full ut-button:text-sm ut-button:font-medium ut-button:bg-primary ut-button:ut-readying:bg-primary/80 ut-button:text-primary-foreground ut-label:text-muted-foreground ut-allowed-content:text-muted-foreground' endpoint='imageUploader' onUploadError={(error: Error) => {
                       toast.error(`Error! ${error.message}`);
                     }} onClientUploadComplete={(res: { url: string }[]) => {
                       form.setValue('images', [...images, res[0].url ]);
@@ -155,18 +168,6 @@ const ProductForm = ({ type, product, productId } : {
         </div>
         <div className='upload-field'>
           {/* isFeatured */}
-        </div>
-        <div>
-          {/* Description */}
-          <FormField control={form.control} name='description' render={({ field } : { field: ControllerRenderProps<z.infer<typeof insertProductSchema>, 'description'> }) => (
-            <FormItem className='w-full'>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea placeholder='Enter product description' className='resize-none' {...field} />
-              </FormControl>
-              <FormMessage/>
-            </FormItem>
-          )} />
         </div>
         <div>
           {/* Submit */}

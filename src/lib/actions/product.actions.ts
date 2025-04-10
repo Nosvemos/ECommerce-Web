@@ -5,6 +5,7 @@ import { LATEST_PRODUCTS_LIMIT, PAGE_SIZE } from '@/lib/constants'
 import { revalidatePath } from 'next/cache'
 import { insertProductSchema, updateProductSchema } from '@/lib/validators'
 import { z } from 'zod'
+import { deleteImage } from '@/lib/actions/uploadthing.actions'
 
 // Get latest products
 export async function getLatestProducts() {
@@ -62,10 +63,17 @@ export async function deleteProduct (id: string) {
     });
     if (!productExists) throw new Error('Product not found');
 
+    const images = productExists.images;
+
     await prisma.product.delete({
       where: {
         id
       }
+    });
+
+    // Delete images
+    images.map(async(image) => {
+      await deleteImage(image);
     });
 
     revalidatePath('/admin/products');

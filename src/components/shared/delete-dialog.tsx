@@ -42,7 +42,7 @@ const DeleteDialog = ({id, action} : {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <Button variant='destructive' size='sm' disabled={isPending} onClick={handleDeleteClick}>
+          <Button variant='destructive' disabled={isPending} onClick={handleDeleteClick}>
             {isPending ? 'Deleting...' : 'Delete'}
           </Button>
         </AlertDialogFooter>
