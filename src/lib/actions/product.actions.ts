@@ -28,6 +28,7 @@ export async function getProductBySlug(slug: string) {
 }
 
 // Get all products
+// eslint-disable-next-line no-unused-vars
 export async function getAllProducts({
   query,
   limit = PAGE_SIZE,
