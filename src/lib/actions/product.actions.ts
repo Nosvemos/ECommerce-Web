@@ -29,12 +29,7 @@ export async function getProductBySlug(slug: string) {
 
 // Get all products
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getAllProducts({
-  query,
-  limit = PAGE_SIZE,
-  page,
-  category
-} : {
+export async function getAllProducts({ query, limit = PAGE_SIZE, page, category } : {
   query: string;
   limit?: number;
   page: number;
