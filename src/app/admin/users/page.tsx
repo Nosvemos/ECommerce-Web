@@ -7,22 +7,32 @@ import Link from 'next/link'
 import DeleteDialog from '@/components/shared/delete-dialog'
 import Pagination from '@/components/shared/pagination'
 import { Badge } from '@/components/ui/badge'
-import { CheckCheck } from 'lucide-react'
+import { CheckCheck, FunnelX } from 'lucide-react'
 
 export const metadata : Metadata = {
   title: 'Admin Users'
 }
 
 const AdminUserPage = async (props: {
-  searchParams: Promise<{ page: string }>
+  searchParams: Promise<{ page: string, query: string }>
 }) => {
-  const { page = '1' } = await props.searchParams;
+  const { page = '1', query: searchText } = await props.searchParams;
 
-  const users = await getAllUsers({ page: Number(page) });
+  const users = await getAllUsers({ page: Number(page), query: searchText });
 
   return (
     <div className='space-y-2'>
       <h2 className='h2-bold'>Users</h2>
+      { searchText && (
+        <div className='flex items-center gap-2'>
+          <span className='text-sm'>Filtered by <i>&quot;{ searchText }&quot;</i>{' '}</span>
+          <Link href='/admin/users'>
+            <Button variant='outline' size='sm'>
+              <FunnelX/>
+            </Button>
+          </Link>
+        </div>
+      ) }
       <div className='overflow-x-auto'>
         <Table>
           <TableHeader>

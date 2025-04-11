@@ -36,7 +36,7 @@ const AdminOrdersPage = async (props: {
         { searchText && (
           <div className='flex items-center gap-2'>
             <span className='text-sm'>Filtered by <i>&quot;{ searchText }&quot;</i>{' '}</span>
-            <Link href='/admin/products'>
+            <Link href='/admin/orders'>
               <Button variant='outline' size='sm'>
                 <FunnelX/>
               </Button>

@@ -11,12 +11,13 @@ import { auth, signIn, signOut } from '@/auth'
 import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import { prisma } from '@/db/prisma'
 import { hashSync } from 'bcrypt-ts-edge'
-import { formatError } from '@/lib/utils'
+import { formatError, isUUID } from '@/lib/utils'
 import { ShippingAddress } from '@/types'
 import { cookies } from 'next/headers'
 import { z } from 'zod'
 import { PAGE_SIZE } from '@/lib/constants'
 import { revalidatePath } from 'next/cache'
+import { Prisma } from '@prisma/client'
 
 // Sign in the user with credentials
 export async function signInWithCredentials(prevState: unknown, formData: FormData) {
@@ -209,11 +210,24 @@ export async function updateProfile (user: {
 }
 
 // Get all users
-export async function getAllUsers ({ limit = PAGE_SIZE, page } : {
+export async function getAllUsers ({ limit = PAGE_SIZE, page, query } : {
   limit?: number;
   page: number;
+  query: string;
 }) {
+  const queryFilter: Prisma.UserWhereInput = query && query !== 'all' ? {
+    OR: [
+      { name: { contains: query, mode: 'insensitive' } },
+      { email: { contains: query, mode: 'insensitive' } },
+      ...((query === 'admin' || query === 'user') ? [{ role: { equals: query } }] : []),
+      ...(isUUID(query) ? [{ id: query }] : [])
+    ]
+  } : {};
+
   const data = await prisma.user.findMany({
+    where: {
+      ...queryFilter
+    },
     orderBy: {
       createdAt: 'desc',
     },
@@ -221,7 +235,11 @@ export async function getAllUsers ({ limit = PAGE_SIZE, page } : {
     skip: (page - 1) * limit,
   });
 
-  const dataCount = await prisma.user.count();
+  const dataCount = await prisma.user.count({
+    where: {
+      ...queryFilter
+    }
+  });
 
   return {
     data,
