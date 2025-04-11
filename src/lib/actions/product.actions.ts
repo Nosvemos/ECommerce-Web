@@ -40,9 +40,12 @@ export async function getProductById(id: string) {
 }
 
 // Get all products
-export async function getAllProducts({ limit = PAGE_SIZE, page } : {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function getAllProducts({ query, limit = PAGE_SIZE, page, category } : {
+  query: string;
   limit?: number;
   page: number;
+  category?: string;
 }) {
   //TODO Category and Query
   const data = await prisma.product.findMany({
