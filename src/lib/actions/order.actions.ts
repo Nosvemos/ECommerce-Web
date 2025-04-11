@@ -1,7 +1,7 @@
 'use server';
 
 import { isRedirectError } from 'next/dist/client/components/redirect-error'
-import { convertToPlainObject, formatError } from '@/lib/utils'
+import { convertToPlainObject, formatError, isNumeric, isUUID } from '@/lib/utils'
 import { auth } from '@/auth'
 import { getMyCart } from '@/lib/actions/cart.actions'
 import { getUserById } from '@/lib/actions/user.actions'
@@ -358,14 +358,47 @@ export async function getOrderSummary () {
 }
 
 // Get all orders
-export async function getAllOrders ({
+export async function getAllOrders({
   limit = PAGE_SIZE,
-  page
-} : {
+  page,
+  query
+}: {
   limit?: number;
   page: number;
+  query: string;
 }) {
+  const queryFilter: Prisma.OrderWhereInput = query && query !== 'all' ? {
+    OR: [
+      // Search in user name
+      {
+        user: {
+          name: {
+            contains: query,
+            mode: 'insensitive'
+          }
+        }
+      },
+
+      // Search in total price (convert query to decimal if it's a number)
+      ...(isNumeric(query) ? [
+        { totalPrice: { equals: parseFloat(query) } }
+      ] : []),
+
+      // Search in ID if the query looks like a UUID
+      ...(isUUID(query) ? [{ id: query }] : []),
+
+      // Search in boolean fields if query is "true" or "false"
+      ...(query.toLowerCase() === 'true' || query.toLowerCase() === 'false' ? [
+        { isPaid: query.toLowerCase() === 'true' },
+        { isDelivered: query.toLowerCase() === 'true' }
+      ] : [])
+    ]
+  } : {};
+
   const data = await prisma.order.findMany({
+    where: {
+      ...queryFilter
+    },
     orderBy: {
       createdAt: 'desc'
     },
@@ -380,7 +413,11 @@ export async function getAllOrders ({
     }
   });
 
-  const dataCount = await prisma.order.count();
+  const dataCount = await prisma.order.count({
+    where: {
+      ...queryFilter
+    }
+  });
 
   return {
     data,

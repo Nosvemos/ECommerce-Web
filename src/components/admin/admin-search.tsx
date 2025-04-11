@@ -16,7 +16,7 @@ const AdminSearch = () => {
   }, [searchParams]);
   return (
     <form method='GET' action={formActionUrl}>
-      <Input type='search' name='query' value={queryValue} onChange={(e) => setQueryValue(e.target.value)} />
+      <Input placeholder='Search...' type='search' name='query' value={queryValue} onChange={(e) => setQueryValue(e.target.value)} />
     </form>
   )
 }

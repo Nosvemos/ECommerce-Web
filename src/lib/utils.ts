@@ -121,3 +121,14 @@ export function formUrlQuery ({params, key, value} : {
 export function formatNumber (number: number) {
   return new Intl.NumberFormat(DEFAULT_REGION.replace('_', '-')).format(number);
 }
+
+// isNumeric
+export function isNumeric(str: string): boolean {
+  return !isNaN(parseFloat(str)) && isFinite(Number(str));
+}
+
+// isUUID
+export function isUUID(str: string): boolean {
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(str);
+}
