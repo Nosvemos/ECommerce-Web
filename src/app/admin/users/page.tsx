@@ -1,11 +1,10 @@
 import { Metadata } from 'next'
-import { getAllUsers } from '@/lib/actions/user.actions'
+import { deleteUser, getAllUsers } from '@/lib/actions/user.actions'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { formatDateTime, formatId } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import DeleteDialog from '@/components/shared/delete-dialog'
-import { deleteOrder } from '@/lib/actions/order.actions'
 import Pagination from '@/components/shared/pagination'
 import { Badge } from '@/components/ui/badge'
 
@@ -14,13 +13,12 @@ export const metadata : Metadata = {
 }
 
 const AdminUserPage = async (props: {
-  searchParams: Promise<{
-    page: string
-  }>
+  searchParams: Promise<{ page: string }>
 }) => {
   const { page = '1' } = await props.searchParams;
+
   const users = await getAllUsers({ page: Number(page) });
-  console.log(users);
+
   return (
     <div className='space-y-2'>
       <h2 className='h2-bold'>Users</h2>
@@ -37,7 +35,7 @@ const AdminUserPage = async (props: {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users?.data?.map(user => (
+            {users.data.map(user => (
               <TableRow key={user.id}>
                 <TableCell>{formatId(user.id)}</TableCell>
                 <TableCell>{user.name}</TableCell>
@@ -52,9 +50,7 @@ const AdminUserPage = async (props: {
                       Edit
                     </Link>
                   </Button>
-                  {/* TODO
-                    <DeleteDialog id={user.id} action={deleteUser} />
-                  */}
+                  <DeleteDialog id={user.id} action={deleteUser} />
                 </TableCell>
               </TableRow>
             ))}

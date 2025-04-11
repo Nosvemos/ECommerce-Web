@@ -10,6 +10,7 @@ import { ShippingAddress } from '@/types'
 import { cookies } from 'next/headers'
 import { z } from 'zod'
 import { PAGE_SIZE } from '@/lib/constants'
+import { revalidatePath } from 'next/cache'
 
 // Sign in the user with credentials
 export async function signInWithCredentials(prevState: unknown, formData: FormData) {
@@ -206,20 +207,36 @@ export async function getAllUsers ({ limit = PAGE_SIZE, page } : {
   limit?: number;
   page: number;
 }) {
+  const data = await prisma.user.findMany({
+    orderBy: {
+      createdAt: 'desc',
+    },
+    take: limit,
+    skip: (page - 1) * limit,
+  });
+
+  const dataCount = await prisma.user.count();
+
+  return {
+    data,
+    totalPages: Math.ceil(dataCount / limit),
+  }
+}
+
+// Delete user
+export async function deleteUser (id: string) {
   try {
-    const data = await prisma.user.findMany({
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: limit,
-      skip: (page - 1) * limit,
+    await prisma.user.delete({
+      where: {
+        id
+      }
     });
 
-    const dataCount = await prisma.user.count();
+    revalidatePath('/admin/users');
 
     return {
-      data,
-      totalPages: Math.ceil(dataCount / limit),
+      success: true,
+      message: 'User deleted successfully'
     }
   } catch (error) {
     return {
