@@ -7,6 +7,7 @@ import Link from 'next/link'
 import DeleteDialog from '@/components/shared/delete-dialog'
 import Pagination from '@/components/shared/pagination'
 import { Badge } from '@/components/ui/badge'
+import { CheckCheck, X } from 'lucide-react'
 
 export const metadata : Metadata = {
   title: 'Admin Users'
@@ -39,14 +40,17 @@ const AdminUserPage = async (props: {
               <TableRow key={user.id}>
                 <TableCell>{formatId(user.id)}</TableCell>
                 <TableCell>{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
+                <TableCell className='flex items-center gap-2'>
+                  {user.email}
+                  {user.emailVerified ? (<CheckCheck className='text-green-500' size={20}/>) : ''}
+                </TableCell>
                 <TableCell>
                   <Badge className='capitalize' variant={user.role === 'user' ? 'secondary' : 'default'}>{user.role}</Badge>
                 </TableCell>
                 <TableCell>{ formatDateTime(user.createdAt).dateTime }</TableCell>
                 <TableCell>
                   <Button variant="outline" size="sm" asChild>
-                    <Link href={`admin/users/${user.id}`}>
+                    <Link href={`/admin/users/${user.id}`}>
                       Edit
                     </Link>
                   </Button>
