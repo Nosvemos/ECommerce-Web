@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { formatCurrency, formatId } from '@/lib/utils'
 import Pagination from '@/components/shared/pagination'
 import DeleteDialog from '@/components/shared/delete-dialog'
+import { FunnelX } from 'lucide-react'
 
 const AdminProductsPage = async (props: {
   searchParams: Promise<{
@@ -30,7 +31,19 @@ const AdminProductsPage = async (props: {
   return (
     <div className='space-y-2'>
       <div className='flex-between'>
-        <h2 className='h2-bold'>Products</h2>
+        <div className='flex items-center gap-3'>
+          <h2 className='h2-bold'>Products</h2>
+          { searchText && (
+            <div className='flex items-center gap-2'>
+              <span className='text-sm'>Filtered by <i>&quot;{ searchText }&quot;</i>{' '}</span>
+              <Link href='/admin/products'>
+                <Button variant='outline' size='sm'>
+                  <FunnelX/>
+                </Button>
+              </Link>
+            </div>
+          ) }
+        </div>
         <Button asChild>
           <Link href='/admin/products/create'>
             Create Product

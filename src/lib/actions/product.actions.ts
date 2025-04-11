@@ -40,15 +40,20 @@ export async function getProductById(id: string) {
 }
 
 // Get all products
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function getAllProducts({ query, limit = PAGE_SIZE, page, category } : {
   query: string;
   limit?: number;
   page: number;
   category?: string;
 }) {
-  //TODO Category and Query
   const data = await prisma.product.findMany({
+    where: {
+      name: {
+        contains: query,
+        mode: 'insensitive'
+      },
+      category: category ? category : undefined,
+    },
     skip: (page - 1) * limit,
     take: limit,
     orderBy: {
@@ -56,7 +61,15 @@ export async function getAllProducts({ query, limit = PAGE_SIZE, page, category 
     }
   });
 
-  const dataCount = await prisma.product.count();
+  const dataCount = await prisma.product.count({
+    where: {
+      name: {
+        contains: query,
+        mode: 'insensitive'
+      },
+      category: category ? category : undefined,
+    }
+  });
 
   return {
     data,

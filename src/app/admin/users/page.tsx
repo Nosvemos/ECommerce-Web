@@ -7,7 +7,7 @@ import Link from 'next/link'
 import DeleteDialog from '@/components/shared/delete-dialog'
 import Pagination from '@/components/shared/pagination'
 import { Badge } from '@/components/ui/badge'
-import { CheckCheck, X } from 'lucide-react'
+import { CheckCheck } from 'lucide-react'
 
 export const metadata : Metadata = {
   title: 'Admin Users'
