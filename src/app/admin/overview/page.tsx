@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import Link from 'next/link'
 import Charts from '@/components/admin/charts'
 import { requireAdmin } from '@/lib/auth-guard'
+import { Button } from '@/components/ui/button'
 
 export const metadata : Metadata = {
   title: 'Admin Dashboard',
@@ -67,7 +68,7 @@ const AdminOverviewPage = async() => {
         </Card>
       </div>
       <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-7'>
-        <Card className="col-span-4">
+        <Card className="col-span lg:col-span-4">
           <CardHeader>
             <CardTitle>Overview</CardTitle>
           </CardHeader>
@@ -77,7 +78,7 @@ const AdminOverviewPage = async() => {
             }}/>
           </CardContent>
         </Card>
-        <Card className="col-span-3">
+        <Card className="col-span lg:col-span-3">
           <CardHeader>
             <CardTitle>Recent Sales</CardTitle>
           </CardHeader>
@@ -104,9 +105,11 @@ const AdminOverviewPage = async() => {
                       {formatCurrency(order.totalPrice)}
                     </TableCell>
                     <TableCell>
-                      <Link href={`/order/${order.id}`}>
-                        <span className='px-2'>Details</span>
-                      </Link>
+                      <Button size='sm' variant='outline' asChild>
+                        <Link href={`/order/${order.id}`}>
+                          <span className='px-2'>Details</span>
+                        </Link>
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
