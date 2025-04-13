@@ -4,7 +4,6 @@ import { APP_NAME } from '@/lib/constants'
 import Menu from '@/components/shared/header/menu'
 import MainNav from '@/components/shared/main-nav'
 import AdminSearch from '@/components/admin/admin-search'
-import Search from '@/components/shared/header/search'
 
 const links = [
   {
