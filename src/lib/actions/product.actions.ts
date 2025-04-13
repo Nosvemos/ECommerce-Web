@@ -1,7 +1,7 @@
 'use server';
 import { prisma } from '@/db/prisma'
 import { convertToPlainObject, formatError } from '@/lib/utils'
-import { LATEST_PRODUCTS_LIMIT, PAGE_SIZE } from '@/lib/constants'
+import { FEATURED_PRODUCTS_LIMIT, LATEST_PRODUCTS_LIMIT, PAGE_SIZE } from '@/lib/constants'
 import { revalidatePath } from 'next/cache'
 import { insertProductSchema, updateProductSchema } from '@/lib/validators'
 import { z } from 'zod'
@@ -181,4 +181,19 @@ export async function getAllCategories () {
   });
 
   return data;
+}
+
+// Get featured products
+export async function getFeaturedProducts () {
+  const data = await prisma.product.findMany({
+    where: {
+      isFeatured: true
+    },
+    orderBy: {
+      createdAt: 'desc'
+    },
+    take: FEATURED_PRODUCTS_LIMIT,
+  });
+
+  return convertToPlainObject(data);
 }
