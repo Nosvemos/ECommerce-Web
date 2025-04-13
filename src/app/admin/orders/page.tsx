@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import { auth } from '@/auth'
 import { deleteOrder, getAllOrders } from '@/lib/actions/order.actions'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { formatCurrency, formatDateTime, formatId } from '@/lib/utils'
