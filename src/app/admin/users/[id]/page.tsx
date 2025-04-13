@@ -14,7 +14,7 @@ const AdminUserUpdatePage = async (props: {
   }>
 }) => {
   await requireAdmin();
-  
+
   const { id } = await props.params;
 
   const user = await getUserById(id);

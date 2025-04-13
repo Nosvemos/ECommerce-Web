@@ -6,6 +6,18 @@ import { Badge } from '@/components/ui/badge'
 import ProductImages from '@/components/shared/product/product-images'
 import { getMyCart } from '@/lib/actions/cart.actions'
 import ProductQuantityButton from '@/components/shared/product/product-quantity-button'
+import { unslugify } from '@/lib/utils'
+
+export async function generateMetadata (props: {
+  params: Promise<{
+    slug: string;
+  }>
+}) {
+  const { slug } = await props.params;
+  return {
+    title: unslugify(slug),
+  }
+}
 
 const ProductDetailsPage = async(props: {
   params: Promise<{ slug: string }>
