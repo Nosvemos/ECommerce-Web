@@ -2,7 +2,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { APP_NAME } from '@/lib/constants'
 import Menu from '@/components/shared/header/menu'
-import { Input } from '@/components/ui/input'
 import MainNav from '@/components/shared/main-nav'
 import AdminSearch from '@/components/admin/admin-search'
 
