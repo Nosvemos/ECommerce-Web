@@ -6,6 +6,12 @@ import { formatCurrency, formatId } from '@/lib/utils'
 import Pagination from '@/components/shared/pagination'
 import DeleteDialog from '@/components/shared/delete-dialog'
 import { FunnelX } from 'lucide-react'
+import { requireAdmin } from '@/lib/auth-guard'
+import { Metadata } from 'next'
+
+export const metadata : Metadata = {
+  title: 'Admin Products',
+}
 
 const AdminProductsPage = async (props: {
   searchParams: Promise<{
@@ -14,6 +20,8 @@ const AdminProductsPage = async (props: {
     category: string
   }>
 }) => {
+  await requireAdmin();
+
   const searchParams = await props.searchParams;
 
   const page = Number(searchParams.page) || 1;
@@ -25,8 +33,6 @@ const AdminProductsPage = async (props: {
     page,
     category
   });
-
-  console.log(products);
 
   return (
     <div className='space-y-2'>

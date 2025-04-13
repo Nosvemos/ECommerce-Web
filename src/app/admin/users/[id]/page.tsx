@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import { getUserById } from '@/lib/actions/user.actions'
 import { notFound } from 'next/navigation'
 import UpdateUserForm from '@/components/forms/update-user-form'
+import { requireAdmin } from '@/lib/auth-guard'
 
 export const metadata: Metadata = {
   title: 'Update User'
@@ -12,6 +13,8 @@ const AdminUserUpdatePage = async (props: {
     id: string
   }>
 }) => {
+  await requireAdmin();
+  
   const { id } = await props.params;
 
   const user = await getUserById(id);
