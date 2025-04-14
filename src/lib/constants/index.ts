@@ -36,6 +36,12 @@ export const PRODUCT_DEFAULT_VALUES = {
   banner: null
 }
 
+export const REVIEW_FORM_DEFAULT_VALUES = {
+  title: '',
+  comment: '',
+  rating: 0
+}
+
 export const CURRENCY_FORMATTER = new Intl.NumberFormat(DEFAULT_REGION.replace('_', '-'), {
   currency: DEFAULT_CURRENCY,
   style: 'currency',
