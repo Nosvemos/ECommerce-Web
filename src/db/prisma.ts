@@ -1,91 +1,104 @@
 import { Pool, neonConfig } from '@neondatabase/serverless';
-import { PrismaNeon } from '@prisma/adapter-neon';
 import { PrismaClient } from '@prisma/client';
 import ws from 'ws';
 
-// Sets up WebSocket connections, which enables Neon to use WebSocket communication.
+// Sets up WebSocket connections for Neon
 neonConfig.webSocketConstructor = ws;
 const connectionString = `${process.env.DATABASE_URL}`;
 
-// Creates a new connection pool using the provided connection string, allowing multiple concurrent connections.
+// Creates a connection pool
 const pool = new Pool({ connectionString });
 
-// Instantiates the Prisma adapter using the Neon connection pool to handle the connection between Prisma and Neon.
-const adapter = new PrismaNeon(pool);
-
-// Extends the PrismaClient with a custom result transformer to convert the price and rating fields to strings.
-export const prisma = new PrismaClient({ adapter }).$extends({
-  result: {
-    product: {
-      price: {
-        compute(product) {
-          return product.price.toString();
+// Create Prisma client with the correct adapter setup
+const prismaClientSingleton = () => {
+  // Import the adapter properly
+  return new PrismaClient({
+    // Use the correct adapter configuration for Neon
+    datasources: {
+      db: {
+        url: connectionString,
+      },
+    },
+  }).$extends({
+    result: {
+      product: {
+        price: {
+          compute(product) {
+            return product.price.toString();
+          },
+        },
+        rating: {
+          compute(product) {
+            return product.rating.toString();
+          },
         },
       },
-      rating: {
-        compute(product) {
-          return product.rating.toString();
+      cart: {
+        itemsPrice: {
+          needs: { itemsPrice: true },
+          compute(cart) {
+            return cart.itemsPrice.toString();
+          }
+        },
+        shippingPrice: {
+          needs: { shippingPrice: true },
+          compute(cart) {
+            return cart.shippingPrice.toString();
+          }
+        },
+        taxPrice: {
+          needs: { taxPrice: true },
+          compute(cart) {
+            return cart.taxPrice.toString();
+          }
+        },
+        totalPrice: {
+          needs: { totalPrice: true },
+          compute(cart) {
+            return cart.totalPrice.toString();
+          }
         },
       },
-    },
-    cart: {
-      itemsPrice: {
-        needs: { itemsPrice: true },
-        compute(cart) {
-          return cart.itemsPrice.toString();
-        }
+      order: {
+        itemsPrice: {
+          needs: { itemsPrice: true },
+          compute(cart) {
+            return cart.itemsPrice.toString();
+          }
+        },
+        shippingPrice: {
+          needs: { shippingPrice: true },
+          compute(cart) {
+            return cart.shippingPrice.toString();
+          }
+        },
+        taxPrice: {
+          needs: { taxPrice: true },
+          compute(cart) {
+            return cart.taxPrice.toString();
+          }
+        },
+        totalPrice: {
+          needs: { totalPrice: true },
+          compute(cart) {
+            return cart.totalPrice.toString();
+          }
+        },
       },
-      shippingPrice: {
-        needs: { shippingPrice: true },
-        compute(cart) {
-          return cart.shippingPrice.toString();
-        }
-      },
-      taxPrice: {
-        needs: { taxPrice: true },
-        compute(cart) {
-          return cart.taxPrice.toString();
-        }
-      },
-      totalPrice: {
-        needs: { totalPrice: true },
-        compute(cart) {
-          return cart.totalPrice.toString();
-        }
-      },
-    },
-    order: {
-      itemsPrice: {
-        needs: { itemsPrice: true },
-        compute(cart) {
-          return cart.itemsPrice.toString();
-        }
-      },
-      shippingPrice: {
-        needs: { shippingPrice: true },
-        compute(cart) {
-          return cart.shippingPrice.toString();
-        }
-      },
-      taxPrice: {
-        needs: { taxPrice: true },
-        compute(cart) {
-          return cart.taxPrice.toString();
-        }
-      },
-      totalPrice: {
-        needs: { totalPrice: true },
-        compute(cart) {
-          return cart.totalPrice.toString();
-        }
-      },
-    },
-    orderItem: {
-      price: {
-        compute(cart) {
-          return cart.price.toString();
+      orderItem: {
+        price: {
+          compute(cart) {
+            return cart.price.toString();
+          }
         }
       }
-    }
-  },
-});
+    },
+  });
+};
+
+// Use global to maintain a single instance across hot reloads in development
+const globalForPrisma = globalThis as unknown as { prisma: ReturnType<typeof prismaClientSingleton> };
+
+export const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
