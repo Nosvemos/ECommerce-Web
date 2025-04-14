@@ -129,5 +129,5 @@ export async function getReviewByProductId (productId: string) {
       productId,
       userId: session.user?.id
     }
-  })
+  });
 }

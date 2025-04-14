@@ -1,9 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Review } from '@/types'
 import Link from 'next/link'
 import ProductReviewForm from '@/components/forms/product-review-form'
+import { getReviews } from '@/lib/actions/review.actions'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Calendar, User } from 'lucide-react'
+import { formatDateTime } from '@/lib/utils'
+import Rating from '@/components/shared/product/rating'
 
 const ProductReviewList = ({ userId, productId, productSlug } : {
   userId: string,
@@ -11,6 +16,15 @@ const ProductReviewList = ({ userId, productId, productSlug } : {
   productSlug: string,
 }) => {
   const [reviews, setReviews] = useState<Review[]>([]);
+
+  useEffect(() => {
+    const loadReviews = async () => {
+      const res = await getReviews(productId);
+      setReviews(res.data);
+    }
+
+    loadReviews();
+  }, [productId]);
 
   const reload = () => {
     console.log('Review submitted');
@@ -29,7 +43,29 @@ const ProductReviewList = ({ userId, productId, productSlug } : {
         </div>
       )}
       <div className='flex flex-col gap-3'>
-        {/* Reviews */}
+        { reviews.map(review => (
+          <Card key={review.id}>
+            <CardHeader className='space-y-2'>
+              <Rating value={review.rating} />
+              <div className='flex-between'>
+                <CardTitle>{review.title}</CardTitle>
+              </div>
+              <CardDescription>{review.description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className='flex space-x-4 text-sm text-muted-foreground'>
+                <div className='flex items-center'>
+                  <User className='mr-1 size-3' />
+                  { review.user ? review.user.name : 'User' }
+                </div>
+                <div className='flex items-center'>
+                  <Calendar className='mr-1 size-3' />
+                  { formatDateTime(review.createdAt).dateTime }
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )) }
       </div>
     </div>
   )
