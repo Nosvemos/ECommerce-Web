@@ -7,7 +7,7 @@ neonConfig.webSocketConstructor = ws;
 const connectionString = `${process.env.DATABASE_URL}`;
 
 // Creates a connection pool
-const pool = new Pool({ connectionString });
+new Pool({ connectionString });
 
 // Create Prisma client with the correct adapter setup
 const prismaClientSingleton = () => {
