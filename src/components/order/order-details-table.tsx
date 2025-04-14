@@ -174,7 +174,7 @@ const OrderDetailsTable = ({ order, paypalClientId, stripeClientSecret, isAdmin 
             </CardContent>
           </Card>
         </div>
-        <div>
+        <div className='mt-5 md:mt-0 max-sm:col-span-2'>
           <Card>
             <CardContent className='p-4 gap-4 space-y-4 text-sm'>
               <div className='flex justify-between'>
