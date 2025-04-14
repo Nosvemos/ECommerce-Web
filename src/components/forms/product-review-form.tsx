@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { insertReviewSchema } from '@/lib/validators'
 import { z } from 'zod'
-import { useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { REVIEW_FORM_DEFAULT_VALUES } from '@/lib/constants'
 import {
@@ -20,11 +20,13 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { StarIcon } from 'lucide-react'
+import { createUpdateReview } from '@/lib/actions/review.actions'
+import { toast } from 'sonner'
 
 const ProductReviewForm = ({ userId, productId, onReviewSubmitted } : {
   userId: string,
   productId: string,
-  onReviewSubmitted?: () => void,
+  onReviewSubmitted: () => void,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -33,8 +35,23 @@ const ProductReviewForm = ({ userId, productId, onReviewSubmitted } : {
     defaultValues: REVIEW_FORM_DEFAULT_VALUES
   });
 
+  // Open form handler
   const handleOpenForm = () => {
+    form.setValue('productId', productId);
+    form.setValue('userId', userId);
+
     setOpen(true);
+  }
+
+  // Submit form handler
+  const onSubmit: SubmitHandler<z.infer<typeof insertReviewSchema>> = async (values) => {
+    const res = await createUpdateReview({...values, productId});
+    if (!res.success) return toast.error(res.message);
+
+    setOpen(false);
+    onReviewSubmitted();
+
+    toast(res.message);
   }
 
   return (
@@ -42,7 +59,7 @@ const ProductReviewForm = ({ userId, productId, onReviewSubmitted } : {
       <Button onClick={handleOpenForm}>Write a Review</Button>
       <DialogContent className='sm:max-w-[425px]'>
         <Form {...form}>
-          <form method='POST'>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
               <DialogTitle>Write a Review</DialogTitle>
               <DialogDescription>Share your thoughts with other customers</DialogDescription>
