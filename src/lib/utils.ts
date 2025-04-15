@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { CURRENCY_FORMATTER, DEFAULT_REGION } from '@/lib/constants'
+import { CURRENCY_FORMATTER, DEFAULT_CURRENCY, DEFAULT_REGION } from '@/lib/constants'
 import qs from 'query-string'
 
 export function cn(...inputs: ClassValue[]) {
@@ -52,6 +52,19 @@ export function formatCurrency(amount: number | string | null) {
   } else {
     return NaN;
   }
+}
+
+// Currency Icon
+export function getCurrencySymbol(currencyCode = DEFAULT_CURRENCY, locale = DEFAULT_REGION.replace('_', '-')) {
+  const formatter = new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currencyCode,
+    currencyDisplay: 'symbol'
+  });
+
+  const parts = formatter.formatToParts(0);
+  const symbolPart = parts.find(part => part.type === 'currency');
+  return symbolPart ? symbolPart.value : currencyCode;
 }
 
 // Shorten UUID
