@@ -89,14 +89,14 @@ export default function PurchaseReceiptEmail ({ order } : OrderInformationProps)
                 </Column>
               </Row>
             </Section>
-            <Section className='my-4'>
+            <Section className='mb-4'>
               { order.orderItems.map((item) => (
-                <Row key={item.productId} className='mt-8'>
+                <Row key={item.productId} className='mt-4'>
                   <Column className='w-20'>
                     <Img
                       width={80}
                       alt={item.name}
-                      className='rounded'
+                      className='rounded mr-2'
                       src={item.image.startsWith('/') ? `${SERVER_URL}${item.image}` : item.image}
                     />
                   </Column>
