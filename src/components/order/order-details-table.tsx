@@ -24,7 +24,7 @@ import { useTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import StripePayment from '@/components/stripe-payment'
 
-const OrderDetailsTable = ({ order, paypalClientId, stripeClientSecret, isAdmin } : { order: Order, paypalClientId: string, stripeClientSecret: string | null, isAdmin: boolean }) => {
+const OrderDetailsTable = ({ order, paypalClientId, stripeClientSecret, isAdmin } : { order: Omit<Order, 'paymentResult'>, paypalClientId: string, stripeClientSecret: string | null, isAdmin: boolean }) => {
   const {
     id,
     shippingAddress,

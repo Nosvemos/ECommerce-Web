@@ -15,8 +15,56 @@ import {
 import { Order } from '@/types'
 import { formatCurrency, formatDateTime } from '@/lib/utils'
 import { SERVER_URL } from '@/lib/constants'
+import sampleData from '@/db/sample-data'
 
-const PurchaseReceiptEmail = ({ order } : { order: Order }) => {
+PurchaseReceiptEmail.PreviewProps = {
+  order: {
+    id: crypto.randomUUID(),
+    userId: '123',
+    user: {
+      name: 'John Doe',
+      email: 'test@test.com',
+    },
+    paymentMethod: 'Stripe',
+    shippingAddress: {
+      fullName: 'John Doe',
+      streetAddress: '123 Main st',
+      city: 'New York',
+      postalCode: '10001',
+      country: 'US',
+    },
+    createdAt: new Date(),
+    totalPrice: '100',
+    taxPrice: '10',
+    shippingPrice: '10',
+    itemsPrice: '80',
+    orderItems: sampleData.products.map((x) => ({
+      name: x.name,
+      orderId: '123',
+      productId: '123',
+      slug: x.slug,
+      qty: x.stock,
+      image: x.images[0],
+      price: x.price.toString(),
+    })),
+    isDelivered: true,
+    deliveredAt: new Date(),
+    isPaid: true,
+    paidAt: new Date(),
+    paymentResult: {
+      id: '123',
+      status: 'succeeded',
+      pricePaid: '100',
+      email_address: 'test@test.com',
+    },
+  },
+} satisfies OrderInformationProps
+
+type OrderInformationProps = {
+  order: Order;
+}
+
+export default function PurchaseReceiptEmail ({ order } : OrderInformationProps) {
   return (
     <Html>
       <Preview>View order receipt</Preview>
@@ -25,7 +73,7 @@ const PurchaseReceiptEmail = ({ order } : { order: Order }) => {
         <Body className='font-sans bg-white'>
           <Container className='max-w-xl'>
             <Heading>Purchase Receipt</Heading>
-            <Section>
+            <Section className='max-w-xl'>
               <Row>
                 <Column>
                   <Text className='mb-0 mr-4 text-gray-500 whitespace-nowrap text-nowrap'>
@@ -33,21 +81,15 @@ const PurchaseReceiptEmail = ({ order } : { order: Order }) => {
                   </Text>
                   <Text className='mt-0 mr-4'>{order.id}</Text>
                 </Column>
-                <Column>
+                <Column align='right'>
                   <Text className='mb-0 mr-4 text-gray-500 whitespace-nowrap text-nowrap'>
                     Purchase Date
                   </Text>
                   <Text className='mt-0 mr-4'>{formatDateTime(order.createdAt).dateTime}</Text>
                 </Column>
-                <Column>
-                  <Text className='mb-0 mr-4 text-gray-500 whitespace-nowrap text-nowrap'>
-                    Price Paid
-                  </Text>
-                  <Text className='mt-0 mr-4'>{formatCurrency(order.totalPrice)}</Text>
-                </Column>
               </Row>
             </Section>
-            <Section className='border border-solid border-gray-500 rounded-lg p-4 md:p-6 my-4'>
+            <Section className='my-4'>
               { order.orderItems.map((item) => (
                 <Row key={item.productId} className='mt-8'>
                   <Column className='w-20'>
@@ -59,10 +101,11 @@ const PurchaseReceiptEmail = ({ order } : { order: Order }) => {
                     />
                   </Column>
                   <Column className='align-top'>
-                    {item.name} x {item.qty}
+                    <Text>{item.name} x {item.qty}</Text>
+                    <Text>{formatCurrency(item.price)}</Text>
                   </Column>
                   <Column align='right' className='align-top'>
-                    { formatCurrency(item.price) }
+                    { formatCurrency(Number(item.price) * item.qty) }
                   </Column>
                 </Row>
               ))}
@@ -98,5 +141,3 @@ const PurchaseReceiptEmail = ({ order } : { order: Order }) => {
     </Html>
   )
 }
-
-export default PurchaseReceiptEmail
