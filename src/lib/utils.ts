@@ -56,6 +56,7 @@ export function formatCurrency(amount: number | string | null) {
 
 // Currency Icon
 export function getCurrencySymbol(currencyCode = DEFAULT_CURRENCY, locale = DEFAULT_REGION.replace('_', '-')) {
+  locale = locale.replace('_', '-');
   const formatter = new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: currencyCode,

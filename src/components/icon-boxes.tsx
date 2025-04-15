@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { DollarSign, Headset, ShoppingBag, WalletCards } from 'lucide-react'
-import { getCurrencySymbol } from '@/lib/utils'
+import { DEFAULT_CURRENCY_SYMBOL } from '@/lib/constants'
 
 const IconBoxes = () => {
   return (
@@ -10,7 +10,7 @@ const IconBoxes = () => {
           <div className='space-y-2'>
             <ShoppingBag/>
             <div className='text-sm font-bold'>Free Shipping</div>
-            <div className='text-sm text-muted-foreground'>Free shipping on order above {getCurrencySymbol()}100.</div>
+            <div className='text-sm text-muted-foreground'>Free shipping on order above {DEFAULT_CURRENCY_SYMBOL}100.</div>
           </div>
           <div className='space-y-2'>
             <DollarSign/>

@@ -3,26 +3,27 @@ import ProductCard from '@/components/shared/product/product-card'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { DEFAULT_CURRENCY_SYMBOL } from '@/lib/constants'
 
 const prices = [
   {
-    name: '$1 to $50',
+    name: `${DEFAULT_CURRENCY_SYMBOL}1 to ${DEFAULT_CURRENCY_SYMBOL}50`,
     value: '1-50'
   },
   {
-    name: '$51 to $100',
+    name: `${DEFAULT_CURRENCY_SYMBOL}51 to ${DEFAULT_CURRENCY_SYMBOL}100`,
     value: '51-100'
   },
   {
-    name: '$101 to $200',
+    name: `${DEFAULT_CURRENCY_SYMBOL}101 to ${DEFAULT_CURRENCY_SYMBOL}200`,
     value: '101-200'
   },
   {
-    name: '$201 to $500',
+    name: `${DEFAULT_CURRENCY_SYMBOL}201 to ${DEFAULT_CURRENCY_SYMBOL}500`,
     value: '201-500'
   },
   {
-    name: '$501 to $1000',
+    name: `${DEFAULT_CURRENCY_SYMBOL}501 to ${DEFAULT_CURRENCY_SYMBOL}1000`,
     value: '501-1000'
   },
 ];
